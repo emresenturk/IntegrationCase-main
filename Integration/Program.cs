@@ -1,4 +1,5 @@
 ﻿using Integration.Service;
+using StackExchange.Redis;
 
 namespace Integration;
 
@@ -6,7 +7,7 @@ public abstract class Program
 {
     public static void Main(string[] args)
     {
-        var service = new ItemIntegrationService();
+        var service = new ItemIntegrationService(new Redlock.CSharp.Redlock(ConnectionMultiplexer.Connect("localhost:6379")));
         
         ThreadPool.QueueUserWorkItem(_ => service.SaveItem("a"));
         ThreadPool.QueueUserWorkItem(_ => service.SaveItem("b"));
